@@ -1016,6 +1016,7 @@ public class JavaSchoolStarter {
         return result;
     }
 
+
     private  String[] setSpace(String str) {
         List<String> result = new ArrayList<>(List.of(str
                 .replaceAll("’=", "' = ")

@@ -3,6 +3,7 @@ package com.digdes.school;
 import java.util.*;
 /**Требования к реализации:
 
+
  1) Исходники необходимо выложить под своей учетной записью  на  GitHub и выдать права на чтение для digdesjavaschool@gmail.com.
  +  2) Все Ваши классы должны лежать в java пакете: com.digdes.school
  +  3) В этом пакете должен лежать класс JavaSchoolStarter, в котором есть метод execute на вход передается строка, а на выход List<Map<String,Object>>.
@@ -67,6 +68,7 @@ public class Main {
             System.out.println("--------------------------");
             System.out.println("----INFO SELECT FROM MAIN " + SELECT);
             System.out.println("--------------------------");
+
 
 
         }catch (Exception ex){
