@@ -1,12 +1,10 @@
 package com.digdes.school;
 
-
 import java.util.*;
 
 public class JavaSchoolStarter {
 
-      List<Map<String,Object>> list = new ArrayList<>();
-
+    List<Map<String,Object>> list = new ArrayList<>();
 
     public JavaSchoolStarter(){
     }
@@ -64,103 +62,25 @@ public class JavaSchoolStarter {
                         }
                         listKeyValue.add(keyValue2);
                     }
-                    
 
-                    
                     for (List<String> list1 : listKeyValue) {
-                         id = null;
-                         lastName = null;
-                         age = null;
-                         cost = null;
-                         active = null;
                         for (String str : list1) {
                             String[] tmp = str.replaceAll("[\\[\\]]","").trim().split("=");
                             switch (tmp[0].trim().replaceAll("’|‘|'","")){
-                                case "ID" -> {
-                                    map.put("ID",Long.parseLong(tmp[1].trim()));
-                                    id = Long.parseLong(tmp[1].trim());
-                                }
-                                case "LASTNAME" -> {
-                                    map.put("LASTNAME", tmp[1].trim().replaceAll("’|‘|'",""));
-                                    lastName = tmp[1].trim().replaceAll("’|‘|'","");
-                                }
-                                case "AGE" -> {
-                                    map.put("AGE", Long.parseLong(tmp[1].trim()));
-                                    age = Long.parseLong(tmp[1].trim());
-                                }
-                                case "COST" -> {
-                                    map.put("COST", Double.valueOf(tmp[1].trim()));
-                                    cost = Double.valueOf(tmp[1].trim());
-                                }
-                                case "ACTIVE" -> {
-                                    map.put("ACTIVE", Boolean.valueOf(tmp[1].trim()));
-                                    active = Boolean.valueOf(tmp[1].trim());
-                                }
+                                case "ID" -> map.put("ID",Long.parseLong(tmp[1].trim()));
+                                case "LASTNAME" -> map.put("LASTNAME", tmp[1].trim().replaceAll("’|‘|'",""));
+                                case "AGE" -> map.put("AGE", Long.parseLong(tmp[1].trim()));
+                                case "COST" -> map.put("COST", Double.valueOf(tmp[1].trim()));
+                                case "ACTIVE" -> map.put("ACTIVE", Boolean.valueOf(tmp[1].trim()));
                                 default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
                             }
                         }
 
                         if(map.size() != 0) {
                             list.add(Map.copyOf(map));
-
-                            map = new HashMap<>();
-                            if (id != null) { map.put("ID", id); }
-                            if (lastName != null) { map.put("LASTNAME", lastName); }
-                            if (age != null) { map.put("AGE", age); }
-                            if (cost != null) { map.put("COST", cost); }
-                            if (active != null) { map.put("ACTIVE", active); }
-                            result.add(map);
+                            result.add(Map.copyOf(map));
                         }
                     }
-
-                    return List.copyOf(result);
-
-                    /*for (int i = 0 ; i < condition.size()-1; i++){
-                        if(i % 2 == 0){
-                            String tmp = condition.get(i).replaceAll("’|‘|'","") + "=" + condition.get(i+1);
-                            keyValue.add(tmp);
-                        }
-                    }
-
-                    for (String str : keyValue) {
-                        String[] tmp = str.replaceAll("[\\[\\]]","").trim().split("=");
-
-                        switch (tmp[0].trim().replaceAll("’|‘|'","")){
-                            case "ID" -> {
-                                map.put("ID",Long.parseLong(tmp[1].trim()));
-                                id = Long.parseLong(tmp[1].trim());
-                            }
-                            case "LASTNAME" -> {
-                                map.put("LASTNAME", tmp[1].trim().replaceAll("’|‘|'",""));
-                                lastName = tmp[1].trim().replaceAll("’|‘|'","");
-                            }
-                            case "AGE" -> {
-                                map.put("AGE", Long.parseLong(tmp[1].trim()));
-                                age = Long.parseLong(tmp[1].trim());
-                            }
-                            case "COST" -> {
-                                map.put("COST", Double.valueOf(tmp[1].trim()));
-                                cost = Double.valueOf(tmp[1].trim());
-                            }
-                            case "ACTIVE" -> {
-                                map.put("ACTIVE", Boolean.valueOf(tmp[1].trim()));
-                                active = Boolean.valueOf(tmp[1].trim());
-                            }
-                            default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
-                        }
-                    }
-
-                    if(map.size() != 0) {
-                        list.add(map);
-
-                        map = new HashMap<>();
-                        if (id != null) { map.put("ID", id); }
-                        if (lastName != null) { map.put("LASTNAME", lastName); }
-                        if (age != null) { map.put("AGE", age); }
-                        if (cost != null) { map.put("COST", cost); }
-                        if (active != null) { map.put("ACTIVE", active); }
-                        result.add(map);
-                    }*/
                 }
                 else { throw new Exception("Не верно составленный запрос"); }
             }
@@ -172,7 +92,9 @@ public class JavaSchoolStarter {
                         condition.remove(0);
                         condition.remove(0);
                         condition.removeIf(x -> x.equals("="));
-                        HashMap<String,Object> map = new HashMap<>();
+
+                        result = List.copyOf(list);
+                        list.clear();
 
                         List<String> keyValue = new ArrayList<>();
 
@@ -182,48 +104,59 @@ public class JavaSchoolStarter {
                                 keyValue.add(tmp);
                             }
                         }
+
                         for (String str : keyValue) {
                             String[] tmp = str.replaceAll("[\\[\\]]","").trim().split("=");
 
                             switch (tmp[0].trim().replaceAll("’|‘|'","")){
                                 case "ID" -> {
-                                    map.put("ID",Long.parseLong(tmp[1].trim()));
-                                    id = Long.parseLong(tmp[1].trim());
+                                    if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { id = Long.parseLong(tmp[1].trim()); }
+                                    else idEq = (long) -1;
                                 }
                                 case "LASTNAME" -> {
-                                    map.put("LASTNAME", tmp[1].trim().replaceAll("’|‘|'",""));
-                                    lastName = tmp[1].trim().replaceAll("’|‘|'","");
+                                    if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { lastName = tmp[1].trim().replaceAll("’|‘|'",""); }
+                                    else lastNameEq = "-1";
                                 }
                                 case "AGE" -> {
-                                    map.put("AGE", Long.parseLong(tmp[1].trim()));
-                                    age = Long.parseLong(tmp[1].trim());
+                                    if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { age = Long.parseLong(tmp[1].trim()); }
+                                    else ageEq = (long) -1;
                                 }
                                 case "COST" -> {
-                                    map.put("COST", Double.valueOf(tmp[1].trim()));
-                                    cost = Double.valueOf(tmp[1].trim());
+                                    if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { cost = Double.valueOf(tmp[1].trim()); }
+                                    else costEq = (double) -1;
                                 }
                                 case "ACTIVE" -> {
-                                    map.put("ACTIVE", Boolean.valueOf(tmp[1].trim()));
-                                    active = Boolean.valueOf(tmp[1].trim());
+                                    if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { active = Boolean.valueOf(tmp[1].trim()); }
+                                    else activeEq = Boolean.FALSE;
                                 }
                                 default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
                             }
                         }
 
-
                         //Прогоняю цикл обновления значений в мапе каждой строки
-                        for (Map<String,Object> objectMap : List.copyOf(list)){
-                            if(request.toUpperCase().contains("ID")) { objectMap.put("id", id); }
-                            if(request.toUpperCase().contains("LASTNAME")) { objectMap.put("lastName", lastName); }
-                            if(request.toUpperCase().contains("AGE")) { objectMap.put("age", age); }
-                            if(request.toUpperCase().contains("COST")) { objectMap.put("cost", cost); }
-                            if(request.toUpperCase().contains("ACTIVE")) { objectMap.put("active", active); }
+                        for (Map<String,Object> objectMap :  result) {
 
-                            if(objectMap.size() != 0) { result.add(objectMap); }
+                            Map<String,Object> tmp =  new HashMap<>(objectMap);
+                            if(id != null ) {
+                                if( objectMap.containsKey("ID")) { tmp.put("ID", id); }
+                            } else if(idEq != null && objectMap.containsKey("ID")) { tmp.remove("ID"); }
+                            if(lastName != null ) {
+                                if( objectMap.containsKey("LASTNAME")) { tmp.put("LASTNAME", lastName); }
+                            } else if(lastNameEq != null && objectMap.containsKey("LASTNAME")) { tmp.remove("LASTNAME"); }
+                            if(age != null ) {
+                                if( objectMap.containsKey("AGE")) { tmp.put("AGE", age); }
+                            } else if(ageEq != null && objectMap.containsKey("AGE")) { tmp.remove("AGE"); }
+                            if(cost != null ) {
+                                if( objectMap.containsKey("COST")) { tmp.put("COST", cost); }
+                            } else if(costEq != null && objectMap.containsKey("COST")) { tmp.remove("COST"); }
+                            if(active != null ) {
+                                if( objectMap.containsKey("ACTIVE")) { tmp.put("ACTIVE", active); }
+                            } else if(activeEq != null && objectMap.containsKey("ACTIVE")) { tmp.remove("ACTIVE"); }
+
+                            list.add(tmp);
                         }
-                        System.out.println("INFO UPDATE:  UPDATE list =  " + list);
-                        list = List.copyOf(result);
-                        return result;
+
+                        return List.copyOf(list);
                     }
                     else { throw new Exception("Не верно составленный запрос"); }
                 }
@@ -232,348 +165,97 @@ public class JavaSchoolStarter {
                     condition.remove(0);
                     condition.remove(0);
 
-
+                    List<Map<String,Object>> noResult = new ArrayList<>();
                     List<String> conditionWhere = List.copyOf(condition);
 
-                    condition.removeIf(x -> x.equals("="));
-                    condition  =  condition.subList(0, condition.indexOf("WHERE"));
-                    conditionWhere = conditionWhere.subList(conditionWhere.indexOf("WHERE") + 1 ,conditionWhere.size());
+                    condition  =  condition.subList(0, condition.indexOf("WHERE")); /** Данные для обновления */
+                    conditionWhere = conditionWhere.subList(conditionWhere.indexOf("WHERE") + 1 ,conditionWhere.size()); /** Данные для сравнения (Where) */
 
-                    System.out.println("INFO UPDATE: " +"condition = " + condition);
-                    System.out.println("INFO UPDATE: " +"conditionWhere = " + conditionWhere);
-
-                    List<String> keyValueWhere = new ArrayList<>();
+                    //Начинаем добавлять в result  все нужные строки
                     List<String> keyValue = new ArrayList<>();
+                    List<String> listAndOr = getSplitAndOr(conditionWhere,keyValue);
 
-                   /* for (int i = 0 ; i < conditionWhere.size()-1; i+=4){
-                        if(!conditionWhere.get(i).equalsIgnoreCase("AND")) {
-                            String tmp = conditionWhere.get(i).replaceAll("’|‘|'","") + " " + conditionWhere.get(i+1) + " " + conditionWhere.get(i+2);
-                            keyValueWhere.add(tmp);
+                    for(Map<String,Object> objectMap : list){
+                        isEquals.clear();
+                        for(String str : keyValue){
+                            List<String> eqList = List.of(str.split(" "));
+                            isEquals.add(isCondition(objectMap, eqList));
                         }
-                    }*/
-
-                    List<String> listAndOr = new ArrayList<>();
-
-                    for (int i = 0 ; i < condition.size()-1; i+=4){
-                        String tmp = condition.get(i).replaceAll("’|‘|'","") + " " + condition.get(i+1) + " " + condition.get(i+2) +
-                                ( (condition.size() >= (i + 4)) ? (" |" + condition.get(i+3)) : ("") );
-                        keyValueWhere.add(tmp);
-                        if(condition.size() >= (i + 4)) listAndOr.add(condition.get(i+3));
+                        if (isView(isEquals,listAndOr)) { result.add(objectMap); }
+                        else noResult.add(objectMap);
                     }
+                    //Заканчиваем добавлять в result  все нужные строки
 
-
+                    //Начинаем обновлять данные в нужных строках
+                    list.clear();
+                    keyValue = new ArrayList<>();
+                    condition.removeIf(x -> x.equals("="));
                     for (int i = 0 ; i < condition.size()-1; i++){
                         if(i % 2 == 0){
-                            String tmp = condition.get(i).replaceAll("’|‘|'","") + "=" + condition.get(i+1);
+                            String tmp = condition.get(i).replaceAll("’|‘|'","") + "="+ condition.get(i+1);
                             keyValue.add(tmp);
                         }
                     }
 
-                    //
-                    for(Map<String,Object> objectMap : list){
-                        isEquals.clear();
-                        //Прогоняю по условиям каждую строку
-                        for(String str : keyValueWhere){
-                            List<String> eqList = List.of(str.split(" "));
+                    for (String str : keyValue) {
+                        String[] tmp = str.replaceAll("[\\[\\]]","").trim().split("=");
 
-                           /* switch (eqList.get(0)){
-                                case "ID" -> {
-                                    if ( (isDigitLong(eqList.get(2))) || (eqList.get(2).equalsIgnoreCase("null") && eqList.get(1).startsWith("!=")) ) { idEq = Long.parseLong(eqList.get(2)); }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    if(eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) {
-                                        switch (eqList.get(1)) {
-                                            case "<" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) < idEq); }
-                                            case ">" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) > idEq); }
-                                            case "<=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) <= idEq); }
-                                            case ">=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) >= idEq); }
-                                            default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                        }
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) != idEq);
-                                    } else if(eqList.get(1).startsWith("=")) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) == idEq);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "LASTNAME" -> {
-                                    lastNameEq = eqList.get(2).replaceAll("’|‘|'","");
-
-                                    if(eqList.get(1).startsWith("=")) {
-                                        isEquals.add(objectMap.get("LASTNAME").equals(lastNameEq));
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        if(objectMap.get("LASTNAME") != null) { isEquals.add(!objectMap.get("LASTNAME").equals(lastNameEq)); }
-                                        else isEquals.add(false);
-                                    } else if(eqList.get(1).startsWith("LIKE")) {
-                                        if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().contains(lastNameEq.replaceAll("%","").trim()));
-                                        } else if(lastNameEq.endsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().startsWith(lastNameEq.replaceAll("%","").trim()));
-                                        } else if(lastNameEq.startsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().endsWith(lastNameEq.replaceAll("%","").trim()));
-                                        } else {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().equals(lastNameEq.replaceAll("%","").trim()));
-                                        }
-                                    } else if(eqList.get(1).startsWith("ILIKE")) {
-                                        if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().contains(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                        } else if(lastNameEq.endsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().startsWith(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                        } else if(lastNameEq.startsWith("%")) {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().endsWith(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                        } else {
-                                            isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().equals(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                        }
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "AGE" -> {
-                                    if ((isDigitLong(eqList.get(2)))  || (eqList.get(2).equalsIgnoreCase("null") && eqList.get(1).startsWith("!="))) { ageEq = Long.parseLong(eqList.get(2)); }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    if(eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) {
-                                        switch (eqList.get(1)) {
-                                            case "<" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) < ageEq); }
-                                            case ">" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) > ageEq); }
-                                            case "<=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) <= ageEq); }
-                                            case ">=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) >= ageEq); }
-                                            default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                        }
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) != ageEq);
-                                    } else if(eqList.get(1).startsWith("=")) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) == ageEq);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "COST" -> {
-                                    if ((isDigitDouble(eqList.get(2)))  || (eqList.get(2).equalsIgnoreCase("null") && eqList.get(1).startsWith("!="))) { costEq = Double.parseDouble(eqList.get(2)); }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    if(eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) {
-                                        switch (eqList.get(1)) {
-                                            case "<" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) < costEq); }
-                                            case ">" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) > costEq); }
-                                            case "<=" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) <= costEq); }
-                                            case ">=" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) >= costEq); }
-                                            default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                        }
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) != costEq);
-                                    } else if(eqList.get(1).startsWith("=")) {
-                                        if(objectMap.get("COST") != null) { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) == costEq); }
-                                        else isEquals.add(false);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "ACTIVE" -> {
-                                    if ((isBoolean(eqList.get(2)))  || (eqList.get(2).equalsIgnoreCase("null") && eqList.get(1).startsWith("!="))) { activeEq = Boolean.parseBoolean(eqList.get(2)); }
-                                    else throw new NumberFormatException("Параметр не является булевым значением");
-
-                                    if(eqList.get(1).startsWith("!=")) {
-                                        isEquals.add(Boolean.parseBoolean(String.valueOf(objectMap.get("ACTIVE"))) != activeEq);
-                                    } else if(eqList.get(1).startsWith("=")) {
-                                        if(objectMap.get("ACTIVE") != null) { isEquals.add(Boolean.parseBoolean(String.valueOf(objectMap.get("ACTIVE"))) == activeEq); }
-                                        else isEquals.add(false);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
-                            }*/
-
-                            switch (eqList.get(0)){
-                                case "ID" -> {
-                                    if ((isDigitLong(eqList.get(2)))) { idEq = Long.parseLong(eqList.get(2)); }
-                                    else if(eqList.get(2).equals("NULL") && eqList.get(1).startsWith("!=")) { idEq = null; }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    System.out.println("INFO UPDATE: " +"costEq = " + costEq);
-                                    System.out.println("INFO UPDATE: " +"eqList.get(1) = \"" + eqList.get(1) + "\"");
-                                    System.out.println("INFO UPDATE: " +"objectMap.get(\"ID\") = " + objectMap.get("ID"));
-
-                                    if((eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) && objectMap.get("ID") != null) {
-                                        switch (eqList.get(1)) {
-                                            case "<" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) < idEq); }
-                                            case ">" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) > idEq); }
-                                            case "<=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) <= idEq); }
-                                            case ">=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) >= idEq); }
-                                            default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                        }
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        if(eqList.get(2).equals("NULL")) { isEquals.add(objectMap.get("ID") != null && objectMap.get("ID") != idEq); }
-                                        else { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) != idEq); }
-                                    } else if(eqList.get(1).startsWith("=") && objectMap.get("ID") != null) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("ID"))) == idEq);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "LASTNAME" -> {
-                                    if(eqList.get(2).equals("NULL") && eqList.get(1).startsWith("!=")) { lastNameEq = null; }
-                                    else { lastNameEq = eqList.get(2).replaceAll("’|‘|'",""); }
-
-                                    System.out.println("INFO UPDATE: " +"costEq = " + costEq);
-                                    System.out.println("INFO UPDATE: " +"eqList.get(1) = \"" + eqList.get(1) + "\"");
-                                    System.out.println("INFO UPDATE: " +"objectMap.get(\"LASTNAME\") = " + objectMap.get("LASTNAME"));
-
-                                    if(eqList.get(1).startsWith("!=")) {
-                                        if(eqList.get(2).equals("NULL")) { isEquals.add(objectMap.get("LASTNAME") != null && objectMap.get("LASTNAME") != lastNameEq); }
-                                        else {  isEquals.add(!objectMap.get("LASTNAME").equals(lastNameEq)); }
-                                    }
-                                    if(objectMap.get("LASTNAME") != null) {
-                                        if(eqList.get(1).startsWith("=")) {
-                                            isEquals.add(objectMap.get("LASTNAME").equals(lastNameEq));
-                                        } else if(eqList.get(1).startsWith("LIKE")) {
-                                            if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().contains(lastNameEq.replaceAll("%","").trim()));
-                                            } else if(lastNameEq.endsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().startsWith(lastNameEq.replaceAll("%","").trim()));
-                                            } else if(lastNameEq.startsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().endsWith(lastNameEq.replaceAll("%","").trim()));
-                                            } else {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().equals(lastNameEq.replaceAll("%","").trim()));
-                                            }
-                                        } else if(eqList.get(1).startsWith("ILIKE")) {
-                                            if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().contains(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                            } else if(lastNameEq.endsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().startsWith(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                            } else if(lastNameEq.startsWith("%")) {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().endsWith(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                            } else {
-                                                isEquals.add(objectMap.get("LASTNAME").toString().toUpperCase().equals(lastNameEq.toUpperCase().replaceAll("%","").trim()));
-                                            }
-                                        }
-                                    }
-                                    else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "AGE" -> {
-                                    if ((isDigitLong(eqList.get(2)))) { ageEq = Long.parseLong(eqList.get(2)); }
-                                    else if(eqList.get(2).equals("NULL") && eqList.get(1).startsWith("!=")) { ageEq = null; }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    System.out.println("INFO UPDATE: " +"ageEq = " + costEq);
-                                    System.out.println("INFO UPDATE: " +"eqList.get(1) = \"" + eqList.get(1) + "\"");
-                                    System.out.println("INFO UPDATE: " +"objectMap.get(\"AGE\") = " + objectMap.get("AGE"));
-
-                                    if((eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) && objectMap.get("ID") != null) {
-                                        switch (eqList.get(1)) {
-                                            case "<" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) < ageEq); }
-                                            case ">" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) > ageEq); }
-                                            case "<=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) <= ageEq); }
-                                            case ">=" -> { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) >= ageEq); }
-                                            default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                        }
-                                    } else if(eqList.get(1).startsWith("!=")) {
-                                        if(eqList.get(2).equals("NULL")) { isEquals.add(objectMap.get("AGE") != null && objectMap.get("AGE") != ageEq); }
-                                        else { isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) != ageEq); }
-                                    } else if(eqList.get(1).startsWith("=") && objectMap.get("ID") != null) {
-                                        isEquals.add(Long.parseLong(String.valueOf(objectMap.get("AGE"))) == ageEq);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                case "COST" -> {
-                                    if ((isDigitDouble(eqList.get(2)))) {
-                                        costEq = Double.parseDouble(eqList.get(2));
-                                    }
-                                    else if(eqList.get(2).equals("NULL") && eqList.get(1).startsWith("!=")) {
-                                        costEq = null;
-                                    }
-                                    else throw new NumberFormatException("Параметр не является числом");
-
-                                    System.out.println("INFO UPDATE: " +"costEq = " + costEq);
-                                    System.out.println("INFO UPDATE: " +"eqList.get(1) = \"" + eqList.get(1) + "\"");
-                                    System.out.println("INFO UPDATE: " +"objectMap.get(\"COST\") = " + objectMap.get("COST"));
-
-                                    if(!eqList.get(1).startsWith("!=") && objectMap.get("COST") != null) {
-                                        if((eqList.get(1).startsWith(">") || eqList.get(1).startsWith("<")) && objectMap.get("COST") != null) {
-                                            switch (eqList.get(1)) {
-                                                case "<" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) < costEq); }
-                                                case ">" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) > costEq); }
-                                                case "<=" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) <= costEq); }
-                                                case ">=" -> { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) >= costEq); }
-                                                default -> throw new Exception("В запросе указаны не верные данные для сравнения");
-                                            }
-                                        }
-                                        else if(eqList.get(1).startsWith("=") && objectMap.get("COST") != null) {
-                                            isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) == costEq);
-                                        }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                    }
-                                    else if(eqList.get(1).startsWith("!=")) {
-                                        if(eqList.get(2).equals("NULL")) {
-                                            isEquals.add(objectMap.containsKey("COST") ? true : false);
-                                            System.out.println("INFO UPDATE: " +"isEquals = " + isEquals);
-                                        }
-                                        else { isEquals.add(Double.parseDouble(String.valueOf(objectMap.get("COST"))) != costEq); }
-                                    } else if (objectMap.get("COST") == null && !eqList.get(1).startsWith("!=")) {
-                                        isEquals.add(false);
-                                    }
-                                }
-                                case "ACTIVE" -> {
-                                    if ((isBoolean(eqList.get(2)))) { activeEq = Boolean.parseBoolean(eqList.get(2)); }
-                                    else if(eqList.get(2).equals("NULL") && eqList.get(1).startsWith("!=")) { activeEq = null; }
-                                    else throw new NumberFormatException("Параметр не является булевым значением");
-
-                                    System.out.println("INFO UPDATE: " +"costEq = " + costEq);
-                                    System.out.println("INFO UPDATE: " +"eqList.get(1) = \"" + eqList.get(1) + "\"");
-                                    System.out.println("INFO UPDATE: " +"objectMap.get(\"ACTIVE\") = " + objectMap.get("ACTIVE"));
-
-                                    if(conditionWhere.get(1).startsWith("!=")) {
-                                        if(conditionWhere.get(2).equals("NULL")) {
-                                            isEquals.add(objectMap.containsKey("ACTIVE") ? true : false);
-                                            System.out.println("INFO UPDATE: " +"isEquals = " + isEquals);
-                                        }
-                                        else { isEquals.add(Boolean.parseBoolean(String.valueOf(objectMap.get("ACTIVE"))) != activeEq); }
-                                    } else if(conditionWhere.get(1).startsWith("=")  && objectMap.get("ID") != null) {
-                                        if(objectMap.get("ACTIVE") != null) { isEquals.add(Boolean.parseBoolean(String.valueOf(objectMap.get("ACTIVE"))) == activeEq); }
-                                        else isEquals.add(false);
-                                    }else throw new Exception("В запросе указаны не верные данные для сравнения");
-                                }
-                                default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
+                        switch (tmp[0].trim().replaceAll("’|‘|'","")){
+                            case "ID" -> {
+                                if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { id = Long.parseLong(tmp[1].trim()); }
+                                else idEq = (long) -1;
                             }
-                        }
-
-                        //Обновляю данные которые совпали по выборке
-                        if (!isEquals.contains(false)) {
-                            for (String str : keyValue) {
-                                String[] tmp = str.replaceAll("[\\[\\]]","").trim().split("=");
-
-                                switch (tmp[0].trim().replaceAll("’|‘|'","")){
-                                    case "ID" -> {
-                                        if(!tmp[1].trim().equalsIgnoreCase("null")) {
-                                            objectMap.put("ID",Long.parseLong(tmp[1].trim()));
-                                            System.out.println("INFO UPDATE: " + "ID = " + id + "( " + Long.parseLong(tmp[1].trim()) + " )" );
-                                        } else objectMap.remove("ID");
-                                    }
-                                    case "LASTNAME" -> {
-                                        if(!tmp[1].trim().equalsIgnoreCase("null")) {
-                                            objectMap.put("LASTNAME", tmp[1].trim().replaceAll("’|‘|'",""));
-                                            System.out.println("INFO UPDATE: " + "LASTNAME = " + lastName + "( " + tmp[1].trim().replaceAll("’|‘|'","") + " )");
-                                        } else objectMap.remove("LASTNAME");
-                                    }
-                                    case "AGE" -> {
-                                        if(!tmp[1].trim().equalsIgnoreCase("null")) {
-                                            objectMap.put("AGE", Long.parseLong(tmp[1].trim()));
-                                            System.out.println("INFO UPDATE: " + "AGE = " + age + "( " + Long.parseLong(tmp[1].trim()) + " )");
-                                        } else objectMap.remove("AGE");
-                                    }
-                                    case "COST" -> {
-                                        if(!tmp[1].trim().equalsIgnoreCase("null")) {
-                                            objectMap.put("COST", Double.valueOf(tmp[1].trim()));
-                                            System.out.println("INFO UPDATE: " + "COST = " + cost + "( " + Double.valueOf(tmp[1].trim()) + " )");
-                                        } else objectMap.remove("COST");
-                                    }
-                                    case "ACTIVE" -> {
-                                        if(!tmp[1].trim().equalsIgnoreCase("null")) {
-                                            objectMap.put("ACTIVE", Boolean.valueOf(tmp[1].trim()));
-                                            System.out.println("INFO UPDATE: " + "ACTIVE = " + active + "( " + Boolean.valueOf(tmp[1].trim()) + " )");
-                                        } else objectMap.remove("ACTIVE");
-                                    }
-                                    default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
-                                }
+                            case "LASTNAME" -> {
+                                if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { lastName = tmp[1].trim().replaceAll("’|‘|'",""); }
+                                else lastNameEq = "-1";
                             }
-                            if(objectMap.size() != 0) { result.add(objectMap); }
+                            case "AGE" -> {
+                                if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { age = Long.parseLong(tmp[1].trim()); }
+                                else ageEq = (long) -1;
+                            }
+                            case "COST" -> {
+                                if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { cost = Double.valueOf(tmp[1].trim()); }
+                                else costEq = (double) -1;
+                            }
+                            case "ACTIVE" -> {
+                                if(!tmp[1].trim().toUpperCase(Locale.ROOT).equals("NULL")) { active = Boolean.valueOf(tmp[1].trim()); }
+                                else activeEq = Boolean.FALSE;
+                            }
+                            default -> throw new Exception("В запросе указаны колонки, которых нет в исходной таблице");
                         }
                     }
+
+                    //Прогоняю цикл обновления значений в мапе каждой строки
+                    for (Map<String,Object> objectMap :  result) {
+
+                        Map<String,Object> tmp =  new HashMap<>(objectMap);
+                        if(id != null ) {
+                            tmp.put("ID", id);
+                        } else if(idEq != null && objectMap.containsKey("ID")) { tmp.remove("ID"); }
+                        if(lastName != null ) {
+                            tmp.put("LASTNAME", lastName);
+                        } else if(lastNameEq != null && objectMap.containsKey("LASTNAME")) { tmp.remove("LASTNAME"); }
+                        if(age != null ) {
+                            tmp.put("AGE", age);
+                        } else if(ageEq != null && objectMap.containsKey("AGE")) { tmp.remove("AGE"); }
+                        if(cost != null ) {
+                             tmp.put("COST", cost);
+                        } else if(costEq != null && objectMap.containsKey("COST")) { tmp.remove("COST"); }
+                        if(active != null ) {
+                            tmp.put("ACTIVE", active);
+                        } else if(activeEq != null && objectMap.containsKey("ACTIVE")) { tmp.remove("ACTIVE"); }
+
+                        list.add(tmp);
+                    }
+                    list.addAll(noResult);
+                    return List.copyOf(list);
+                    //Заканчиваем обновлять данные в нужных строках
+
                 }
                 else { throw new Exception("Не верно составленный запрос"); }
-
             }
             case "DELETE" -> {
                 if(task.length == 1 ) {
-                    System.out.println("INFO DELETE:  DELETE ALL ");
                     result = list;
                     list.clear();
                     return result;
@@ -612,7 +294,6 @@ public class JavaSchoolStarter {
 
                     List<String> keyValue = new ArrayList<>();
                     List<String> listAndOr = getSplitAndOr(condition,keyValue);
-
 
                     for(Map<String,Object> objectMap : list){
                         isEquals.clear();
@@ -666,24 +347,29 @@ public class JavaSchoolStarter {
                          isResult = objectMap.get("LASTNAME").equals(lastNameEq);
                     } else if(eqList.get(1).startsWith("LIKE")) {
                          assert lastNameEq != null;
-                         lastNameEq = lastNameEq.replaceAll("%","").trim();
                          if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
+                             lastNameEq = lastNameEq.replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().contains(lastNameEq);
                         } else if(lastNameEq.endsWith("%")) {
+                             lastNameEq = lastNameEq.replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().startsWith(lastNameEq);
                         } else if(lastNameEq.startsWith("%")) {
+                             lastNameEq = lastNameEq.replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().endsWith(lastNameEq);
                         } else {
                             isResult = objectMap.get("LASTNAME").toString().equals(lastNameEq);
                         }
                     } else if(eqList.get(1).startsWith("ILIKE")) {
                          assert lastNameEq != null;
-                         lastNameEq = lastNameEq.toUpperCase().replaceAll("%","").trim();
+
                          if(lastNameEq.startsWith("%") && lastNameEq.endsWith("%")) {
+                             lastNameEq = lastNameEq.toUpperCase().replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().toUpperCase().contains(lastNameEq);
                         } else if(lastNameEq.endsWith("%")) {
+                             lastNameEq = lastNameEq.toUpperCase().replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().toUpperCase().startsWith(lastNameEq);
                         } else if(lastNameEq.startsWith("%")) {
+                             lastNameEq = lastNameEq.toUpperCase().replaceAll("%","").trim();
                             isResult = objectMap.get("LASTNAME").toString().toUpperCase().endsWith(lastNameEq);
                         } else {
                             isResult = objectMap.get("LASTNAME").toString().toUpperCase().equals(lastNameEq);
