@@ -168,8 +168,8 @@ public class JavaSchoolStarter {
                     List<Map<String,Object>> noResult = new ArrayList<>();
                     List<String> conditionWhere = List.copyOf(condition);
 
-                    condition  =  condition.subList(0, condition.indexOf("WHERE")); /** Данные для обновления */
-                    conditionWhere = conditionWhere.subList(conditionWhere.indexOf("WHERE") + 1 ,conditionWhere.size()); /** Данные для сравнения (Where) */
+                    condition  =  condition.subList(0, condition.indexOf("WHERE")); // Данные для обновления
+                    conditionWhere = conditionWhere.subList(conditionWhere.indexOf("WHERE") + 1 ,conditionWhere.size()); //Данные для сравнения (Where)
 
                     //Начинаем добавлять в result  все нужные строки
                     List<String> keyValue = new ArrayList<>();

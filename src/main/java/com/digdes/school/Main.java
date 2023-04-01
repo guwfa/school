@@ -39,7 +39,7 @@ public class Main {
                    "('lastName' = 'Петров' ,'id'=3, 'age'=20)" +
                    "('lastName' = 'Максимов' , 'id'=2, 'age'=60, 'active'=true)"
            );
-            //INSERT = javaSchoolStarter.execute("INSERT VALUES 'lastName' = 'dsads' , 'id'=4, 'age'=30, 'active'=false");
+            INSERT = javaSchoolStarter.execute("INSERT VALUES 'lastName' = 'dsads' , 'id'=4, 'age'=30, 'active'=false");
 
             System.out.println("----INFO INSERT FROM MAIN ");
             if(INSERT != null) {
@@ -61,7 +61,7 @@ public class Main {
             }
 
             /**DELETE*/
-            //DELETE = javaSchoolStarter.execute("delete WHERE 'age' = 20  or 'lastName' = 'Иван%'");
+            DELETE = javaSchoolStarter.execute("delete WHERE 'age' = 20  or 'lastName' = 'Иван%'");
 
             System.out.println("----INFO DELETE FROM MAIN ");
             if(DELETE != null) {
